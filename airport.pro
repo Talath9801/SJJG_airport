@@ -7,4 +7,5 @@ SOURCES += \
         main.cpp
 
 HEADERS += \
-    adjlist.h
+    adjlist.h \
+    timefunction.h
