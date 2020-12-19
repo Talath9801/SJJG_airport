@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <iostream>
+#include <iomanip>
 #include <string>
 #include <stack>
 #include <queue>
@@ -131,97 +132,111 @@ void CreateAdjList(AdjList &mylist,vector<vector<string>> str)
     }
 }
 
-bool transAbility(ArcNode vex1,ArcNode vex2)
+bool transAbility(ArcNode arc1,ArcNode arc2)
 //两个航班能否构成转机关系
 {
-    if(vex1.arcInfo.ArriAirport!=vex2.arcInfo.deparAirport)
+    if(arc1.arcInfo.ArriAirport!=arc2.arcInfo.deparAirport)
         return 0;
-    if(cmpTime(vex1.arcInfo.arriDate,vex1.arcInfo.arriHour,vex1.arcInfo.arriMinute
-               ,vex2.arcInfo.arriDate,vex2.arcInfo.arriHour,vex2.arcInfo.arriMinute))
+    if(cmpTime(arc1.arcInfo.arriDate,arc1.arcInfo.arriHour,arc1.arcInfo.arriMinute
+               ,arc2.arcInfo.deparDate,arc2.arcInfo.deparHour,arc2.arcInfo.deparMinute)==1)
     {
         return 1;
     }
     return 0;
 }
 
-int FirstAdjVex(AdjList vexlist, int v)
-//返回存在下标为v的位置的顶点的第一个邻接顶点的位置，不存在则返回-1
+ArcNode* firstAdjArc(AdjList adjlist, ArcNode *cur_arc)
+//返回由当前弧的弧尾发出的第一条可以构成转机的弧，如果不存在，返回空指针
 {
-    int pos;
-    if(vexlist[v].firstArc)
-    {
-        pos=vexlist[v].firstArc->adjvex;
-        return pos;
-    }
-    return -1;
-}
-int NextAdjVex(AdjList vexlist,int v,int w)
-//返回v的相对于w的下一个邻接顶点，其中v，w都是顶点在list中的存储位置
-{
-    int pos;
     ArcNode *p;
-    p=vexlist[v].firstArc;
+    int v=cur_arc->arcInfo.ArriAirport-1;//上一班飞机目标机场的存储位置
+    p=adjlist[v].firstArc;
     while(p)
     {
-        if(p->adjvex==w)
+        if(transAbility(*cur_arc,*p))//如果满足转机条件
         {
-            if(p->nextarc&&p->nextarc->adjvex!=w)//如果w还不是最后一个顶点,且排除两个机场之间多条航线的问题
+            //cout<<cur_arc->arcInfo.flightID<<"   first->"<<p->arcInfo.flightID<<endl;
+            return p;
+        }
+        //如果不满足转机条件
+        p=p->nextarc;
+    }
+    return NULL;
+}
+
+ArcNode* nextAdjArc(AdjList adjlist,ArcNode *vvv,ArcNode *w)
+//返回由vvv的弧尾顶点发出的相对于弧w之后的一条可以形成转机的弧，如果不存在，返回空指针
+{
+    int v=vvv->arcInfo.ArriAirport-1;//上一班飞机目标机场的存储位置
+    ArcNode *p;
+    p=adjlist[v].firstArc;
+    while(p)
+    {
+        if(p==w&&p->nextarc)//找到w且还不是最后一条边
+        {
+            p=p->nextarc;
+            if(p==NULL)
+                return NULL;
+            while(p)
             {
-                pos=p->nextarc->adjvex;
-                return pos;
+                if(transAbility(*vvv,*p))//如果满足转机条件
+                {
+                    //cout<<vvv->arcInfo.flightID<<"after"<<w->arcInfo.flightID<<"next"<<p->arcInfo.flightID<<endl;
+                    return p;
+                }
+                //如果不满足转机条件
+                p=p->nextarc;
+                if(p==NULL)
+                    return NULL;
             }
         }
         p=p->nextarc;
     }
-    return -1;
+    return NULL;
+}
+int printArc(ArcNode* arc)
+{
+    cout.flags(ios::left);
+    cout<<setw(3)<<arc->arcInfo.deparAirport<<"-- flight "
+       <<arc->arcInfo.flightID<<" -->"<<arc->arcInfo.ArriAirport<<" "<<endl;
 }
 
-void DFStraverse(AdjList adjlist,int v,bool *flag)
-//从v出发
+void BFStraverse(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
+//从存储位置为v的机场出发，广度优先遍历，非递归
 {
-    flag[v]=1;
-    cout<<adjlist[v].airport_NO<<" ";
-    for(int w=FirstAdjVex(adjlist,v);w>=0;w=NextAdjVex(adjlist,v,w))
+    int depthlimit=9;
+    int count=0;
+    queue<ArcNode> myqueue;
+    //先把起始点后面的弧都压到队列里面
+    ArcNode* h;
+    h=adjlist[v].firstArc;
+    while(h)
     {
-        if(flag[w]==0)
-            DFStraverse(adjlist,w,flag);
+        //cout<<h->arcInfo.flightID<<"(->"<<h->arcInfo.ArriAirport<<")"<<" "<<endl;
+        visit(h);
+        myqueue.push(*h);
+        h=h->nextarc;
     }
-}
 
-void BFStravers(AdjList &adjlist, int port_NO)
-//从第port_N个机场出发广度优先遍历
-{
-    bool flag[VEX_NUM];//是否被遍历过
-    for(int i=0;i<VEX_NUM;i++)
-        flag[i]=0;
+    count++;
+    if(count>depthlimit)
+        exit(1);
 
-    queue<int> myqueue;//辅助队列
-    for(int i=0;i<VEX_NUM;i++)
+    while(!myqueue.empty())
     {
-        if(flag[i]==0)//未被访问过
+        ArcNode *head=&myqueue.front();
+        myqueue.pop();
+        for(ArcNode* w=firstAdjArc(adjlist,head);w!=NULL;w=nextAdjArc(adjlist,head,w))
         {
-            flag[i]=1;
-            cout<<adjlist[i].airport_NO<<" ";
-            myqueue.push(i);
-            while(!myqueue.empty())
-            {
-                int temp=myqueue.front();//队头结点的存储位置
-                ArcNode *p;
-                p=adjlist[temp].firstArc;//去看它的邻接顶点有哪些
-
-                while(p)
-                {
-                    //p指向的结点的存储位置为 p->arcInfo.ArriAirport-1
-                    if(flag[p->arcInfo.ArriAirport-1]==0)
-                    {
-                        flag[p->arcInfo.ArriAirport-1]=1;
-                        cout<<adjlist[p->arcInfo.ArriAirport-1].airport_NO<<" ";
-                        myqueue.push(p->arcInfo.ArriAirport-1);
-                    }
-                }
-            }
+            //cout<<w->arcInfo.flightID<<"(->"<<w->arcInfo.ArriAirport<<")"<<" "<<endl;
+            visit(w);
+            myqueue.push(*w);
         }
+        count++;
+        if(count>depthlimit)
+            exit(1);
     }
+    cout<<"end";
 }
 
 #endif // ADJLIST_H
