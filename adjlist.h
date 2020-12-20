@@ -51,16 +51,16 @@ void CreateAdjList(AdjList &mylist,vector<vector<string>> str);
 bool transAbility(ArcNode arc1,ArcNode arc2);
 //两个航班能否构成转机关系
 
-ArcNode* firstAdjArc(AdjList adjlist, ArcNode *cur_arc);
+ArcNode* firstAdjArc_Time(AdjList adjlist, ArcNode *cur_arc);
 //返回由当前弧的弧尾发出的第一条可以构成转机的弧，如果不存在，返回空指针
 
-ArcNode* nextAdjArc(AdjList adjlist,ArcNode *vvv,ArcNode *w);
+ArcNode* nextAdjArc_Time(AdjList adjlist,ArcNode *vvv,ArcNode *w);
 //返回由vvv的弧尾顶点发出的相对于弧w之后的一条可以形成转机的弧，如果不存在，返回空指针
 
 int printArc(ArcNode* arc);
 
 
-void BFStraverse(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
+void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
 //从存储位置为v的机场出发，广度优先遍历，非递归
 
 #endif // ADJLIST_H

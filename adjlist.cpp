@@ -1,5 +1,5 @@
 ﻿#include <adjlist.h>
-
+//#define depthLimit
 void CreateAdjList(AdjList &mylist,vector<vector<string>> str)
 {
     for(int i=0;i<VEX_NUM;i++)
@@ -99,13 +99,14 @@ bool transAbility(ArcNode arc1,ArcNode arc2)
     return 0;
 }
 
-ArcNode* firstAdjArc(AdjList adjlist, ArcNode *cur_arc)
+ArcNode* firstAdjArc_Time(AdjList adjlist, ArcNode *cur_arc)
 //返回由当前弧的弧尾发出的第一条可以构成转机的弧，如果不存在，返回空指针
 {
     ArcNode *p;
     //int v=cur_arc->arcInfo.ArriAirport-1;//上一班飞机目标机场的存储位置
     int v=cur_arc->adjvex;
    // cout<<v<<endl;
+#define debug1
 #ifndef debug1
     //调试段错误
     cout<<v<<endl;
@@ -129,7 +130,7 @@ ArcNode* firstAdjArc(AdjList adjlist, ArcNode *cur_arc)
     return NULL;
 }
 
-ArcNode* nextAdjArc(AdjList adjlist,ArcNode *vvv,ArcNode *w)
+ArcNode* nextAdjArc_Time(AdjList adjlist,ArcNode *vvv,ArcNode *w)
 //返回由vvv的弧尾顶点发出的相对于弧w之后的一条可以形成转机的弧，如果不存在，返回空指针
 {
     int v=vvv->arcInfo.ArriAirport-1;//上一班飞机目标机场的存储位置
@@ -166,11 +167,15 @@ int printArc(ArcNode* arc)
        <<arc->arcInfo.flightID<<" -->"<<arc->arcInfo.ArriAirport<<" "<<endl;
 }
 
-void BFStraverse(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
+void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
 //从存储位置为v的机场出发，广度优先遍历，非递归
 {
+    cout<<"begin"<<endl;
+
+#ifndef depthLimit
     int depthlimit=9;
     int count=0;
+#endif
     queue<ArcNode> myqueue;
     //先把起始点后面的弧都压到队列里面
     ArcNode* h;
@@ -183,29 +188,60 @@ void BFStraverse(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
         h=h->nextarc;
     }
 
+
+#ifndef depthLimit
     count++;
     if(count>depthlimit)
         exit(1);
+#endif
 
     while(!myqueue.empty())
     {
-        ArcNode *head=&myqueue.front();
-#ifndef debug1
-        if(head->arcInfo.flightID==39)
+        //ArcNode *head=&myqueue.front();
+        //注：这里不能直接把指针指向队头，否则pop之后会出问题
+        ArcNode *head;
+        head=(ArcNode*)malloc(sizeof (ArcNode));
+        head->adjvex=myqueue.front().adjvex;
+        head->nextarc=myqueue.front().nextarc;
+        head->arcInfo.airFare=myqueue.front().arcInfo.airFare;
+        head->arcInfo.arriDate=myqueue.front().arcInfo.arriDate;
+        head->arcInfo.arriHour=myqueue.front().arcInfo.arriHour;
+        head->arcInfo.flightID=myqueue.front().arcInfo.flightID;
+        head->arcInfo.deparDate=myqueue.front().arcInfo.deparDate;
+        head->arcInfo.deparHour=myqueue.front().arcInfo.deparHour;
+        head->arcInfo.arriMinute=myqueue.front().arcInfo.arriMinute;
+        head->arcInfo.planeModel=myqueue.front().arcInfo.planeModel;
+        head->arcInfo.deparMinute=myqueue.front().arcInfo.deparMinute;
+        head->arcInfo.deparAirport=myqueue.front().arcInfo.deparAirport;
+        head->arcInfo.ArriAirport=myqueue.front().arcInfo.ArriAirport;
+
+
+
+        myqueue.pop();
+        for(ArcNode* w=firstAdjArc_Time(adjlist,head);w!=NULL;w=nextAdjArc_Time(adjlist,head,w))
         {
-            cout<<"error"<<endl;
+#define debug1
+#ifndef debug1
+        if(w->arcInfo.deparAirport==39)
+        {
+            cout<<"debug1"<<endl;
         }
 #endif
-        myqueue.pop();
-        for(ArcNode* w=firstAdjArc(adjlist,head);w!=NULL;w=nextAdjArc(adjlist,head,w))
-        {
             //cout<<w->arcInfo.flightID<<"(->"<<w->arcInfo.ArriAirport<<")"<<" "<<endl;
             visit(w);
             myqueue.push(*w);
         }
+#ifndef depthLimit
         count++;
         if(count>depthlimit)
+        {
+            cout<<"reach depth limit"<<endl;
             exit(1);
+        }
+
+#endif
+
+
     }
-    cout<<"end";
+    //cout<<"end";
 }
