@@ -29,5 +29,7 @@ int main()
     CreateAdjList(mylist,strArray);//构建邻接表
 
     BFStraverse(mylist,0,printArc);
+    cout<<endl<<"------------"<<endl;
+    //BFStraverse(mylist,38,printArc);
 
 }

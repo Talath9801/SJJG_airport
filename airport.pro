@@ -4,7 +4,9 @@ CONFIG -= app_bundle
 CONFIG -= qt
 
 SOURCES += \
-        main.cpp
+        main.cpp \
+    adjlist.cpp \
+    timefunction.cpp
 
 HEADERS += \
     adjlist.h \
