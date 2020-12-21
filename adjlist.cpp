@@ -105,7 +105,7 @@ ArcNode* firstAdjArc_Time(AdjList adjlist, ArcNode *cur_arc)
     ArcNode *p;
     //int v=cur_arc->arcInfo.ArriAirport-1;//上一班飞机目标机场的存储位置
     int v=cur_arc->adjvex;
-   // cout<<v<<endl;
+    // cout<<v<<endl;
 #define debug1
 #ifndef debug1
     //调试段错误
@@ -230,10 +230,10 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
         {
 #define debug1
 #ifndef debug1
-        if(w->arcInfo.deparAirport==39)
-        {
-            cout<<"debug1"<<endl;
-        }
+            if(w->arcInfo.deparAirport==39)
+            {
+                cout<<"debug1"<<endl;
+            }
 #endif
             //cout<<w->arcInfo.flightID<<"(->"<<w->arcInfo.ArriAirport<<")"<<" "<<endl;
             visit(w);
@@ -306,4 +306,110 @@ void DFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
 
     }
     cout<<"end DFS"<<endl;
+}
+
+void BFS_depth(AdjList adjlist, int v,int trans,int canVisit[VEX_NUM])
+//从存储位置为v的机场出发，广度优先遍历，非递归，限制最多trans中转
+{
+
+    for(int i=0;i<VEX_NUM;i++)
+        canVisit[i]=-1;
+    queue<ArcNode> myqueue;
+    queue<int> depthQueue;//平行操作一个队列，记录结点深度
+    //先把起始点后面的弧都压到队列里面
+    ArcNode* h;
+    h=adjlist[v].firstArc;
+    while(h)
+    {
+        //可以直飞，0次转机
+        canVisit[h->adjvex]=0;
+        myqueue.push(*h);
+        depthQueue.push(1);//起点直接连接的结点深度为1
+        h=h->nextarc;
+    }
+
+    while(!myqueue.empty())
+    {
+        //ArcNode *head=&myqueue.front();
+        //注：这里不能直接把指针指向队头，否则pop之后会出问题
+        ArcNode *head;
+        head=(ArcNode*)malloc(sizeof (ArcNode));
+        head->adjvex=myqueue.front().adjvex;
+        head->nextarc=myqueue.front().nextarc;
+        head->arcInfo.airFare=myqueue.front().arcInfo.airFare;
+        head->arcInfo.arriDate=myqueue.front().arcInfo.arriDate;
+        head->arcInfo.arriHour=myqueue.front().arcInfo.arriHour;
+        head->arcInfo.flightID=myqueue.front().arcInfo.flightID;
+        head->arcInfo.deparDate=myqueue.front().arcInfo.deparDate;
+        head->arcInfo.deparHour=myqueue.front().arcInfo.deparHour;
+        head->arcInfo.arriMinute=myqueue.front().arcInfo.arriMinute;
+        head->arcInfo.planeModel=myqueue.front().arcInfo.planeModel;
+        head->arcInfo.deparMinute=myqueue.front().arcInfo.deparMinute;
+        head->arcInfo.deparAirport=myqueue.front().arcInfo.deparAirport;
+        head->arcInfo.ArriAirport=myqueue.front().arcInfo.ArriAirport;
+
+        int headDepth;
+        headDepth=depthQueue.front();//头结点的深度，下面推进去的结点深度要加一
+        if(headDepth>trans)//中转次数
+        {
+            break;
+        }
+
+        myqueue.pop();
+        depthQueue.pop();
+        for(ArcNode* w=firstAdjArc_Time(adjlist,head);w!=NULL;w=nextAdjArc_Time(adjlist,head,w))
+        {
+            //visit(w);
+            if(canVisit[w->adjvex]==-1)
+               canVisit[w->adjvex]=canVisit[head->adjvex]+1;
+            myqueue.push(*w);
+            depthQueue.push(headDepth+1);
+        }
+
+    }
+}
+
+
+void list2Mat(AdjList adjlist, int mat[VEX_NUM][VEX_NUM])
+//矩阵初始化为-1
+//操作的时候，如果直飞，改成0
+//如果一次转机，在还是-1的地方改成1
+//如果两次转机，在还是-1的地方改成2
+{
+    for(int i=0;i<VEX_NUM;i++)
+    {
+        for(int j=0;j<VEX_NUM;j++)
+        {
+            mat[i][j]=-1;
+        }
+    }
+
+    for(int i=0;i<VEX_NUM;i++)
+    {
+        BFS_depth(adjlist,i,0,mat[i]);
+    }
+    for(int i=0;i<VEX_NUM;i++)
+    {
+        BFS_depth(adjlist,i,1,mat[i]);
+    }
+    for(int i=0;i<VEX_NUM;i++)
+    {
+        BFS_depth(adjlist,i,2,mat[i]);
+    }
+}
+
+void printMat(int mat[VEX_NUM][VEX_NUM])
+{
+    for(int i=0;i<VEX_NUM;i++)
+    {
+        for(int j=0;j<VEX_NUM;j++)
+        {
+            if(mat[i][j]>=0)
+            cout<<mat[i][j];
+            else {
+                cout<<" ";
+            }
+        }
+        cout<<endl;
+    }
 }

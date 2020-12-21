@@ -66,5 +66,12 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
 //限制搜索深度，深度为3，即限制最多两次中转
 void DFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
 //从存储位置为v的机场出发，深度优先遍历，非递归
-
+void list2Mat(AdjList adjlist, int mat[VEX_NUM][VEX_NUM]);
+//矩阵初始化为-1
+//操作的时候，如果直飞，改成0
+//如果一次转机，在还是-1的地方改成1
+//如果两次转机，在还是-1的地方改成2
+void BFS_depth(AdjList adjlist, int v,int trans,int canVisit[VEX_NUM]);
+//可设置深度的广搜
+void printMat(int mat[VEX_NUM][VEX_NUM]);
 #endif // ADJLIST_H
