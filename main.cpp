@@ -28,9 +28,23 @@ int main()
     AdjList mylist;
     CreateAdjList(mylist,strArray);//构建邻接表
 
-    BFStraverse_Time(mylist,3,printArc);
-    //cout<<endl<<"------------"<<endl;
-    //BFStraverse(mylist,38,printArc);
-    DFStraverse_Time(mylist,5,printArc);
+
+    int mode;
+    cout<<"choose the operation: 1 for travers,"<<endl;
+    cin>>mode;
+    if(mode==1)
+    {
+        cout<<"input two airport numbers, the first one for DFS, the second one for BFS"<<endl
+           <<"mind that the you can make at most 2 travers in BFS, and all available routes are taken into account"<<endl;
+        int n1,n2;
+        cin>>n1>>n2;
+        DFStraverse_Time(mylist,n1-1,printArc);
+        BFStraverse_Time(mylist,n2-1,printArc);
+    }
+    else
+    {
+        cout<<"input error"<<endl;
+    }
+
 
 }
