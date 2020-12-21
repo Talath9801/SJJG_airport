@@ -28,7 +28,7 @@ int main()
     AdjList mylist;
     CreateAdjList(mylist,strArray);//构建邻接表
 
-    BFStraverse_Time(mylist,0,printArc);
+    BFStraverse_Time(mylist,3,printArc);
     //cout<<endl<<"------------"<<endl;
     //BFStraverse(mylist,38,printArc);
     DFStraverse_Time(mylist,5,printArc);

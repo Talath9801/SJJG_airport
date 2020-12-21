@@ -1,5 +1,5 @@
 ﻿#include <adjlist.h>
-//#define depthLimit
+#define depthLimit
 void CreateAdjList(AdjList &mylist,vector<vector<string>> str)
 {
     for(int i=0;i<VEX_NUM;i++)
@@ -177,6 +177,7 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
     int count=0;
 #endif
     queue<ArcNode> myqueue;
+    queue<int> depthQueue;//平行操作一个队列，记录结点深度
     //先把起始点后面的弧都压到队列里面
     ArcNode* h;
     h=adjlist[v].firstArc;
@@ -185,6 +186,7 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
         //cout<<h->arcInfo.flightID<<"(->"<<h->arcInfo.ArriAirport<<")"<<" "<<endl;
         visit(h);
         myqueue.push(*h);
+        depthQueue.push(1);//起点直接连接的结点深度为1
         h=h->nextarc;
     }
 
@@ -215,9 +217,15 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
         head->arcInfo.deparAirport=myqueue.front().arcInfo.deparAirport;
         head->arcInfo.ArriAirport=myqueue.front().arcInfo.ArriAirport;
 
-
+        int headDepth;
+        headDepth=depthQueue.front();//头结点的深度，下面推进去的结点深度要加一
+        if(headDepth>2)
+        {
+            break;//超过转机两次的限制,2
+        }
 
         myqueue.pop();
+        depthQueue.pop();
         for(ArcNode* w=firstAdjArc_Time(adjlist,head);w!=NULL;w=nextAdjArc_Time(adjlist,head,w))
         {
 #define debug1
@@ -230,6 +238,7 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
             //cout<<w->arcInfo.flightID<<"(->"<<w->arcInfo.ArriAirport<<")"<<" "<<endl;
             visit(w);
             myqueue.push(*w);
+            depthQueue.push(headDepth+1);
         }
 #ifndef depthLimit
         count++;
