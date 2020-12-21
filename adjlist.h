@@ -62,5 +62,9 @@ int printArc(ArcNode* arc);
 
 void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
 //从存储位置为v的机场出发，广度优先遍历，非递归
+//按照时间顺序遍历所有可以构成转机的情况，可以重复经过一个机场
+//限制搜索深度，深度为3，即限制最多两次中转
+void DFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc));
+//从存储位置为v的机场出发，深度优先遍历，非递归
 
 #endif // ADJLIST_H

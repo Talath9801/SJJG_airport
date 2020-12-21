@@ -168,9 +168,9 @@ int printArc(ArcNode* arc)
 }
 
 void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
-//从存储位置为v的机场出发，广度优先遍历，非递归
+//从存储位置为v的机场出发，广度优先遍历，非递归，限制最多两次中转
 {
-    cout<<"begin"<<endl;
+    cout<<"begin BFS"<<endl;
 
 #ifndef depthLimit
     int depthlimit=9;
@@ -236,12 +236,65 @@ void BFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
         if(count>depthlimit)
         {
             cout<<"reach depth limit"<<endl;
-            exit(1);
+            //exit(1);
+            break;
         }
 
 #endif
 
 
     }
-    //cout<<"end";
+    cout<<"end BFS"<<endl;
+}
+
+void DFStraverse_Time(AdjList adjlist, int v,int(*visit)(ArcNode* arc))
+//从存储位置为v的机场出发，深度优先遍历，非递归
+{
+    cout<<"begin DFS"<<endl;
+
+    stack<ArcNode> mystack;
+    //先把起始点后面的第一个弧压到栈里面
+    ArcNode* h;
+    h=adjlist[v].firstArc;
+    if(h)
+    {
+        visit(h);
+        mystack.push(*h);
+    }
+    else
+    {
+        cout<<"empty head! Error! "<<endl;
+    }
+
+    while(!mystack.empty())
+    {
+        ArcNode *head;
+        head=(ArcNode*)malloc(sizeof (ArcNode));
+        head->adjvex=mystack.top().adjvex;
+        head->nextarc=mystack.top().nextarc;
+        head->arcInfo.airFare=mystack.top().arcInfo.airFare;
+        head->arcInfo.arriDate=mystack.top().arcInfo.arriDate;
+        head->arcInfo.arriHour=mystack.top().arcInfo.arriHour;
+        head->arcInfo.flightID=mystack.top().arcInfo.flightID;
+        head->arcInfo.deparDate=mystack.top().arcInfo.deparDate;
+        head->arcInfo.deparHour=mystack.top().arcInfo.deparHour;
+        head->arcInfo.arriMinute=mystack.top().arcInfo.arriMinute;
+        head->arcInfo.planeModel=mystack.top().arcInfo.planeModel;
+        head->arcInfo.deparMinute=mystack.top().arcInfo.deparMinute;
+        head->arcInfo.deparAirport=mystack.top().arcInfo.deparAirport;
+        head->arcInfo.ArriAirport=mystack.top().arcInfo.ArriAirport;
+
+
+
+        mystack.pop();
+        ArcNode* w=firstAdjArc_Time(adjlist,head);
+
+        if(w)
+        {
+            visit(w);
+            mystack.push(*w);
+        }
+
+    }
+    cout<<"end DFS"<<endl;
 }
