@@ -43,8 +43,25 @@ typedef struct VNode
     ArcNode *firstArc;
 }VNode,AdjList[VEX_NUM];
 
+typedef struct shortway
+{
+    int plane[2];
+};
+typedef struct situation
+{
+    char date_s;
+    int hour_s;
+    int min_s;
 
+    char date_cur;
+    int hour_cur;
+    int min_cur;
 
+    int fee;
+    int flightList[8];
+
+    int planeNum;
+};
 
 void CreateAdjList(AdjList &mylist,vector<vector<string>> str);
 
@@ -74,4 +91,6 @@ void list2Mat(AdjList adjlist, int mat[VEX_NUM][VEX_NUM]);
 void BFS_depth(AdjList adjlist, int v,int trans,int canVisit[VEX_NUM]);
 //可设置深度的广搜
 void printMat(int mat[VEX_NUM][VEX_NUM]);
+void limitDirect(AdjList adjlist,int from,int to);
+void limitOneTrans(AdjList adjlist, int matrix[VEX_NUM][VEX_NUM],int from, int to);
 #endif // ADJLIST_H

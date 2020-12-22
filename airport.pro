@@ -6,7 +6,8 @@ CONFIG -= qt
 SOURCES += \
         main.cpp \
     adjlist.cpp \
-    timefunction.cpp
+    timefunction.cpp \
+    limit0or1.cpp
 
 HEADERS += \
     adjlist.h \

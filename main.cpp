@@ -34,7 +34,7 @@ int main()
 
     int mode;
     cout<<"choose the operation: "<<endl
-       <<"1 for DFS/BFS travers, 2 for adjmatrix"<<endl;
+       <<"1 for DFS/BFS travers, 2 for adjmatrix,4 for 0 or 1 transition"<<endl;
     cin>>mode;
     while(mode)
     {
@@ -73,6 +73,26 @@ int main()
             cin>>mode;
             continue;
         }
+        else if(mode==4)//直飞或一次中转
+        {
+            cout<<"input 2 airport"<<endl;
+            int n1,n2;
+            cin>>n1>>n2;
+            if(adjMatrix[n1-1][n2-1]==0)
+            {
+                limitDirect(mylist,n1-1,n2-1);
+                limitOneTrans(mylist,adjMatrix,n1-1,n2-1);
+            }
+            else if(adjMatrix[n1-1][n2-1]==1)
+            {
+                limitOneTrans(mylist,adjMatrix,n1-1,n2-1);
+            }
+            else cout<<"cannot reach within limit"<<endl;
+            cout<<"************************************************"<<endl;
+            cout<<"input mode"<<endl;
+            cin>>mode;
+            continue;
+        }
         else
         {
             cout<<"input error"<<endl;
@@ -82,36 +102,7 @@ int main()
             continue;
         }
     }
-    //cin>>mode;
-//    if(mode==1)
-//    {
-//        cout<<"input two airport numbers, the first one for DFS, the second one for BFS"<<endl
-//           <<"mind that the you can make at most 2 travers in BFS, and all available routes are taken into account"<<endl;
-//        int n1,n2;
-//        cin>>n1>>n2;
-//        DFStraverse_Time(mylist,n1-1,printArc);
-//        BFStraverse_Time(mylist,n2-1,printArc);
-//    }
-//    else if(mode==2)
-//    {
-//        cout<<"input x1,x2, meaning from airport x1 to airport x2"<<endl;
-//        cout<<"to see if can be reached directly/ with 1 transfer/ 2 transfter"<<endl;
-//        int i,j;
-//        cin>>i>>j;
-//        int t=adjMatrix[i-1][j-1];
-//        if(t==-1)
-//            cout<<"cannot reach"<<endl;
-//        else if(t==0)
-//            cout<<"directly"<<endl;
-//        else if(t==1)
-//            cout<<"with 1 transfer"<<endl;
-//        else if(t==2)
-//            cout<<"with 2 transfer"<<endl;
-//    }
-//    else
-//    {
-//        cout<<"input error"<<endl;
-//    }
+
 
 
 }
