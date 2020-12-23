@@ -38,7 +38,7 @@ void limitOneTrans(AdjList adjlist, int matrix[VEX_NUM][VEX_NUM],int from, int t
             {
                 if(transAbility(*h,*p)&&p->adjvex==to)//可以中转
                 {
-                    cout<<"flight "<<h->arcInfo.flightID<<" + flight "<<p->arcInfo.flightID<<endl;
+                    cout<<h->arcInfo.deparAirport<<" --flight "<<h->arcInfo.flightID<<" - flight "<<p->arcInfo.flightID<<"-->"<<p->arcInfo.ArriAirport<<endl;
 
                 }
                 p=p->nextarc;

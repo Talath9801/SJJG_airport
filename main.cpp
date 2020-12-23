@@ -30,11 +30,14 @@ int main()
 
     int adjMatrix[VEX_NUM][VEX_NUM];
     list2Mat(mylist,adjMatrix);
-//    printMat(adjMatrix);
+    //    printMat(adjMatrix);
 
     int mode;
-    cout<<"choose the operation: "<<endl
-       <<"1 for DFS/BFS travers, 2 for adjmatrix,4 for 0 or 1 transition"<<endl;
+    cout<<"choose the operation: "<<endl;
+    cout<<"1 for DFS/BFS travers"<<endl;
+    cout<<"2 for adjmatrix"<<endl;
+    cout<<"4 for 0 or 1 transition"<<endl;
+    cout<<"5 for between 2 airport, all possible flight within limit"<<endl;
     cin>>mode;
     while(mode)
     {
@@ -88,6 +91,17 @@ int main()
                 limitOneTrans(mylist,adjMatrix,n1-1,n2-1);
             }
             else cout<<"cannot reach within limit"<<endl;
+            cout<<"************************************************"<<endl;
+            cout<<"input mode"<<endl;
+            cin>>mode;
+            continue;
+        }
+        else if(mode==5)
+        {
+            cout<<"input 2 airport"<<endl;
+            int n1,n2;
+            cin>>n1>>n2;
+            fromTo(mylist,adjMatrix,n1-1,n2-1);
             cout<<"************************************************"<<endl;
             cout<<"input mode"<<endl;
             cin>>mode;

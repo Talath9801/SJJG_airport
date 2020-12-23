@@ -93,4 +93,7 @@ void BFS_depth(AdjList adjlist, int v,int trans,int canVisit[VEX_NUM]);
 void printMat(int mat[VEX_NUM][VEX_NUM]);
 void limitDirect(AdjList adjlist,int from,int to);
 void limitOneTrans(AdjList adjlist, int matrix[VEX_NUM][VEX_NUM],int from, int to);
+void limitTwoTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
+void fromTo(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
+void limitThreeTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
 #endif // ADJLIST_H

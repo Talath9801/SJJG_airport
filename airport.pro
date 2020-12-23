@@ -7,7 +7,8 @@ SOURCES += \
         main.cpp \
     adjlist.cpp \
     timefunction.cpp \
-    limit0or1.cpp
+    limit0or1.cpp \
+    fromto.cpp
 
 HEADERS += \
     adjlist.h \
