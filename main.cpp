@@ -37,7 +37,8 @@ int main()
     cout<<"1 for DFS/BFS travers"<<endl;
     cout<<"2 for adjmatrix"<<endl;
     cout<<"4 for 0 or 1 transition"<<endl;
-    cout<<"5 for between 2 airport, all possible flight within limit"<<endl;
+    cout<<"5 for between 2 airport, all possible flight with no limit"<<endl;
+    cout<<"6 for between 2 airport, all possible flight with limitation"<<endl;
     cin>>mode;
     while(mode)
     {
@@ -102,6 +103,28 @@ int main()
             int n1,n2;
             cin>>n1>>n2;
             fromTo(mylist,adjMatrix,n1-1,n2-1);
+            cout<<"************************************************"<<endl;
+            cout<<"input mode"<<endl;
+            cin>>mode;
+            continue;
+        }
+        else if(mode==6)//有限制的所有备选航线
+        {
+            cout<<"input 2 airport"<<endl;
+            int n1,n2;
+            cin>>n1>>n2;
+            int hour1,min1,hour2,min2,hour3,min3,hour4,min4;
+            char model;
+            cout<<"input the limit: depart time range, arrive time range, planeModel"<<endl;
+            cout<<"for example 8:00~12:00  15:00~20:00  1"<<endl;
+            char ch;
+
+            cin>>hour1>>ch>>min1>>ch>>hour2>>ch>>min2;
+            cin>>hour3>>ch>>min3>>ch>>hour4>>ch>>min4;
+            cin>>model;
+
+            con_fromTo(mylist,adjMatrix,n1-1,n2-1,hour1,min1,hour2,min2,hour3,min3,hour4,min4,model);
+
             cout<<"************************************************"<<endl;
             cout<<"input mode"<<endl;
             cin>>mode;

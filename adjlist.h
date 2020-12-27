@@ -8,6 +8,7 @@
 #include <stack>
 #include <queue>
 #include <timefunction.h>
+#include <deque>
 using namespace std;
 #define VEX_NUM 79
 typedef struct AInfo
@@ -47,22 +48,13 @@ typedef struct shortway
 {
     int plane[2];
 };
-typedef struct situation
+
+typedef struct mypath
 {
-    char date_s;
-    int hour_s;
-    int min_s;
-
-    char date_cur;
-    int hour_cur;
-    int min_cur;
-
-    int fee;
-    int flightList[8];
-
-    int planeNum;
+    int cost;
+    int timeLength;
+    ArcNode *flightList[4];
 };
-
 void CreateAdjList(AdjList &mylist,vector<vector<string>> str);
 
 bool transAbility(ArcNode arc1,ArcNode arc2);
@@ -96,4 +88,11 @@ void limitOneTrans(AdjList adjlist, int matrix[VEX_NUM][VEX_NUM],int from, int t
 void limitTwoTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
 void fromTo(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
 void limitThreeTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to);
+
+void con_oneTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM], int from,int to,int h1,int m1,int h2,int m2,int h3,int m3,int h4,int m4,char model,mypath *timepath,mypath *feepath);
+void con_direct(AdjList adjlist,int from,int to,int h1,int m1,int h2,int m2,int h3,int m3,int h4,int m4,char model,mypath *timepath,mypath *feepath);
+void con_twoTrans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to,int hr1,int m1,int hr2,int m2,int hr3,int m3,int hr4,int m4,char model,mypath *timepath,mypath *feepath);
+void con_3trans(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to,int hr1,int m1,int hr2,int m2,int hr3,int m3,int hr4,int m4,char model,mypath *timepath,mypath *feepath);
+void con_fromTo(AdjList adjlist,int matrix[VEX_NUM][VEX_NUM],int from,int to,int h1,int m1,int h2,int m2,int h3,int m3,int h4,int m4,char model);
+int timeSpan(ArcNode *depar,ArcNode *arri);
 #endif // ADJLIST_H
