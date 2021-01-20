@@ -53,8 +53,8 @@ typedef struct mypath
 {
     int cost;
     int timeLength;
-    ArcNode *flightList[4];
-};
+    ArcNode *flightList[4];//路径的“弧”
+};//用来记录最便宜和时间最少的路径
 void CreateAdjList(AdjList &mylist,vector<vector<string>> str);
 
 bool transAbility(ArcNode arc1,ArcNode arc2);
